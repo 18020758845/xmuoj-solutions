@@ -102,11 +102,11 @@
     outline: none;
   }
 
-  /* ===== 搜索结果 ===== */
-  .search .search-results {
+  /* ===== 搜索结果 - 自定义按题目搜索 ===== */
+  .search .results-panel {
     margin-top: 4px;
   }
-  .search .search-results .search-result {
+  .search .results-panel .matching-post {
     cursor: pointer;
     padding: 5px 8px;
     margin: 2px 0;
@@ -114,31 +114,26 @@
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
   }
-  .search .search-results .search-result:hover {
+  .search .results-panel .matching-post:hover {
     background: var(--sidebar-hover);
     border-left-color: var(--primary-light);
   }
-  .search .search-results .search-result a {
+  .search .results-panel .matching-post a {
     color: var(--primary-dark);
     font-weight: 600;
     text-decoration: none;
     display: block;
   }
-  .search .search-results .search-result a:hover {
+  .search .results-panel .matching-post a:hover {
     color: var(--primary);
   }
-  .search .search-results .search-result .search-keyword {
+  .search .results-panel .matching-post em.search-keyword {
     color: var(--primary);
     background: rgba(108,92,231,0.08);
     padding: 0 3px;
     border-radius: 3px;
     font-weight: 600;
-  }
-  .search .search-results .search-result .search-result-content {
-    font-size: 12px;
-    color: var(--text-light);
-    margin-top: 2px;
-    display: block;
+    font-style: normal;
   }
 
   /* ===== 主内容区 ===== */
@@ -277,34 +272,103 @@ window.$docsify = {
   loadSidebar: true,
   subMaxLevel: 2,
   auto2top: true,
-  search: {
-    paths: 'auto',
-    placeholder: '输入题目编号或名称搜索...',
-    noData: '没有找到匹配的题目',
-    depth: 2,
-    hideOtherSidebarContent: false,
-  },
+  search: 'auto',
   themeColor: '#6c5ce7',
   coverpage: false,
   logo: '',
   nameLink: '/',
   plugins: [
     function(hook, vm) {
-      hook.doneEach(function() {
-        var container = document.querySelector('.search');
-        if (!container) return;
-        container.addEventListener('click', function(e) {
-          var result = e.target.closest('.search-result');
-          if (!result) return;
-          var link = result.querySelector('a');
-          if (!link || e.target.tagName === 'A') return;
-          e.preventDefault();
-          var href = link.getAttribute('href');
-          if (href) {
-            // 直接用 hash 跳转，确保 Docsify 路由正确响应
-            window.location.hash = href.replace(/^.*#/, '#');
+      // 存储题目索引
+      var problemIndex = [];
+      var searchTimeout = null;
+
+      function buildIndex() {
+        problemIndex = [];
+        var headings = document.querySelectorAll('.markdown-section h2[id]');
+        headings.forEach(function(h2) {
+          if (!h2.id) return;
+          var title = h2.textContent.trim();
+          // 获取考点和思路摘要
+          var summary = '';
+          var el = h2.nextElementSibling;
+          while (el && el.tagName !== 'H2') {
+            summary += el.textContent.replace(/\s+/g, ' ').trim() + ' ';
+            el = el.nextElementSibling;
           }
+          summary = summary.substring(0, 120);
+          problemIndex.push({ id: h2.id, title: title, summary: summary });
         });
+      }
+
+      function highlightText(text, query) {
+        var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        return text.replace(re, '<em class="search-keyword">$1</em>');
+      }
+
+      function doSearch(query) {
+        var panel = document.querySelector('.results-panel');
+        if (!panel) return;
+        var q = query.trim().toLowerCase();
+        if (!q) {
+          panel.classList.remove('show');
+          panel.innerHTML = '';
+          return;
+        }
+        panel.classList.add('show');
+        var matches = problemIndex.filter(function(item) {
+          return item.title.toLowerCase().includes(q) ||
+                 item.summary.toLowerCase().includes(q);
+        });
+        if (matches.length === 0) {
+          panel.innerHTML = '<div class="matching-post" style="padding:8px;color:var(--text-light);font-size:13px;">没有找到匹配的题目</div>';
+          return;
+        }
+        panel.innerHTML = matches.map(function(item) {
+          var hlTitle = highlightText(item.title, q);
+          var hlSummary = highlightText(item.summary, q);
+          return '<div class="matching-post" data-link="' + item.id + '">' +
+            '<a href="#/README?id=' + item.id + '">' +
+            hlTitle +
+            '<p style="font-size:12px;color:var(--text-light);margin:2px 0 0;font-weight:normal;">' +
+            hlSummary.substring(0, 100) + '</p>' +
+            '</a>' +
+            '</div>';
+        }).join('');
+        // 绑定点击跳转：点击整个条目区域触发跳转
+        panel.querySelectorAll('.matching-post').forEach(function(post) {
+          post.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') return;
+            var link = post.querySelector('a');
+            if (link) {
+              var href = link.getAttribute('href');
+              if (href) {
+                window.location.hash = href.replace(/^.*#/, '#');
+              }
+            }
+          });
+        });
+      }
+
+      // 每次页面渲染完后重建索引，绑定搜索输入
+      hook.doneEach(function() {
+        buildIndex();
+        var input = document.querySelector('.search input');
+        if (input) {
+          // 移除旧监听器（用新函数替换）
+          var handler = input._searchHandler;
+          if (handler) input.removeEventListener('input', handler);
+          var newHandler = function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+              doSearch(input.value);
+            }, 150);
+          };
+          input._searchHandler = newHandler;
+          input.addEventListener('input', newHandler);
+          // 如果已经有值，触发搜索
+          if (input.value) doSearch(input.value);
+        }
       });
     }
   ]
