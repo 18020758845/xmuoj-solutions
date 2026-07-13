@@ -290,35 +290,21 @@ window.$docsify = {
   nameLink: '/',
   plugins: [
     function(hook, vm) {
-      // 搜索结果点击跳转
       hook.doneEach(function() {
-        var bindClick = function() {
-          var items = document.querySelectorAll('.search-results .search-result');
-          items.forEach(function(item) {
-            if (item._clickBound) return;
-            item._clickBound = true;
-            item.addEventListener('click', function(e) {
-              // 如果点击的是 <a> 本身，让它自然跳转
-              if (e.target.tagName === 'A') return;
-              var a = item.querySelector('a');
-              if (a) {
-                var href = a.getAttribute('href');
-                if (href) {
-                  e.preventDefault();
-                  vm.route.change(href);
-                }
-              }
-            });
-          });
-        };
-        bindClick();
-        // 搜索输入时也绑定新生成的条目
-        var searchInput = document.querySelector('.search input');
-        if (searchInput) {
-          searchInput.addEventListener('input', function() {
-            setTimeout(bindClick, 50);
-          });
-        }
+        var container = document.querySelector('.search');
+        if (!container) return;
+        container.addEventListener('click', function(e) {
+          var result = e.target.closest('.search-result');
+          if (!result) return;
+          var link = result.querySelector('a');
+          if (!link || e.target.tagName === 'A') return;
+          e.preventDefault();
+          var href = link.getAttribute('href');
+          if (href) {
+            // 直接用 hash 跳转，确保 Docsify 路由正确响应
+            window.location.hash = href.replace(/^.*#/, '#');
+          }
+        });
       });
     }
   ]
