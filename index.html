@@ -28,7 +28,7 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-    color: var(--text);
+    color: #ffffff;
     background: url('images/bg-ocean.jpg') no-repeat center top fixed;
     background-size: cover;
     min-height: 100vh;
@@ -54,7 +54,7 @@
     display: block;
     padding: 8px 20px 8px 24px;
     font-size: 13.5px;
-    color: var(--text-secondary);
+    color: #ffffff;
     border-left: 3px solid transparent;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -63,12 +63,12 @@
   .sidebar-nav a:hover {
     background: var(--sidebar-hover);
     border-left-color: var(--sand);
-    color: var(--sand-light);
+    color: #ffffff;
   }
   .sidebar-nav a.active {
     background: var(--sidebar-hover);
     border-left-color: var(--sand);
-    color: var(--sand-light);
+    color: #ffffff;
     font-weight: 700;
   }
 
@@ -77,15 +77,15 @@
     padding: 20px 20px 12px;
     font-size: 17px;
     font-weight: 700;
-    color: var(--sand-light);
+    color: #ffffff;
     border-bottom: 1px solid var(--border);
   }
   .sidebar > h1 a {
-    color: var(--sand-light);
+    color: #ffffff;
     text-decoration: none;
   }
   .sidebar > h1 a:hover {
-    color: var(--warm-white);
+    color: #ffffff;
   }
 
   /* ===== 搜索框 ===== */
@@ -103,7 +103,8 @@
     transition: all 0.2s;
   }
   .search input::placeholder {
-    color: var(--text-muted);
+    color: #ffffff;
+    opacity: 0.5;
   }
   .search input:focus {
     border-color: var(--sand);
@@ -128,13 +129,13 @@
     border-left-color: var(--sand);
   }
   .search .results-panel .matching-post a {
-    color: var(--warm-white);
+    color: #ffffff;
     font-weight: 600;
     text-decoration: none;
     display: block;
   }
   .search .results-panel .matching-post a:hover {
-    color: var(--sand-light);
+    color: #ffffff;
   }
   .search .results-panel .matching-post em.search-keyword {
     color: var(--sand-light);
@@ -152,13 +153,15 @@
   .markdown-section {
     max-width: 900px;
     padding: 20px 40px 60px;
+    background: rgba(60, 135, 185, 0.08);
+    border-radius: 16px;
   }
 
   /* ===== h1 主标题 ===== */
   .markdown-section h1 {
     font-size: 28px;
     font-weight: 800;
-    color: var(--sand-light);
+    color: #ffffff;
     padding: 20px 28px;
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -174,7 +177,7 @@
   .markdown-section h2 {
     font-size: 20px;
     font-weight: 700;
-    color: var(--sand-light);
+    color: #ffffff;
     padding: 14px 18px;
     margin: 32px 0 0 0;
     background: var(--card-bg);
@@ -187,20 +190,35 @@
 
   .markdown-section ul li {
     margin: 6px 0;
-    color: var(--text);
+    color: #ffffff;
   }
   .markdown-section ul li strong:first-child {
-    color: var(--sand-light);
+    color: #ffffff;
   }
 
   /* ===== 考点标签专用 ===== */
   .markdown-section h2 + p {
     margin: 8px 0 0 0;
     padding: 8px 18px;
-    background: var(--card-bg);
+    background: rgba(60, 135, 185, 0.15);
     border-radius: 0 0 10px 10px;
     border-left: 4px solid var(--sand-light);
-    color: var(--text-secondary);
+    color: #ffffff;
+  }
+
+  /* ===== h2下方的列表（思路/关键代码/总结） ===== */
+  .markdown-section h2 + p + ul {
+    margin: 0;
+    padding: 10px 18px 12px 36px;
+    background: rgba(60, 135, 185, 0.12);
+    border-radius: 0 0 10px 10px;
+    color: #ffffff;
+  }
+  .markdown-section h2 + p + ul li {
+    color: #ffffff;
+  }
+  .markdown-section h2 + p + ul li strong:first-child {
+    color: #ffffff;
   }
 
   /* ===== 代码块 ===== */
@@ -241,7 +259,7 @@
     background: var(--card-bg);
     padding: 12px 18px;
     border-radius: 0 10px 10px 0;
-    color: var(--text-secondary);
+    color: #ffffff;
     font-size: 14px;
   }
 
@@ -281,7 +299,7 @@
     padding: 8px 14px;
     border-bottom: 1px solid var(--border);
     background: var(--card-bg);
-    color: var(--text);
+    color: #ffffff;
   }
   .markdown-section tr:last-child td {
     border-bottom: none;
@@ -374,7 +392,7 @@ window.$docsify = {
                  item.summary.toLowerCase().includes(q);
         });
         if (matches.length === 0) {
-          panel.innerHTML = '<div class="matching-post" style="padding:8px;color:var(--text-light);font-size:13px;">没有找到匹配的题目</div>';
+          panel.innerHTML = '<div class="matching-post" style="padding:8px;color:#ffffff;font-size:13px;">没有找到匹配的题目</div>';
           return;
         }
         panel.innerHTML = matches.map(function(item) {
@@ -383,7 +401,7 @@ window.$docsify = {
           return '<div class="matching-post" data-link="' + item.id + '">' +
             '<a href="#/README?id=' + item.id + '">' +
             hlTitle +
-            '<p style="font-size:12px;color:var(--text-light);margin:2px 0 0;font-weight:normal;">' +
+            '<p style="font-size:12px;color:#ffffff;margin:2px 0 0;font-weight:normal;">' +
             hlSummary.substring(0, 100) + '</p>' +
             '</a>' +
             '</div>';
