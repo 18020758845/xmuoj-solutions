@@ -12,28 +12,52 @@
     --primary-light: #a29bfe;
     --primary-dark: #4834d4;
     --accent: #fd79a8;
-    --bg: #f8f9fe;
-    --card-bg: #ffffff;
+    --bg: #f5f2ff;
+    --card-bg: rgba(255, 255, 255, 0.85);
     --text: #2d3436;
     --text-light: #636e72;
-    --border: #e8e8f0;
-    --code-bg: #f0f0f6;
-    --sidebar-bg: #ffffff;
-    --sidebar-hover: #f0eefd;
-    --shadow: 0 2px 12px rgba(108, 92, 231, 0.08);
+    --border: rgba(108, 92, 231, 0.12);
+    --code-bg: rgba(108, 92, 231, 0.04);
+    --sidebar-bg: rgba(255, 255, 255, 0.9);
+    --sidebar-hover: rgba(108, 92, 231, 0.08);
+    --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.06);
+    --shadow-md: 0 8px 32px rgba(108, 92, 231, 0.1);
+    --shadow-lg: 0 16px 48px rgba(108, 92, 231, 0.12);
+  }
+
+  /* ===== 动态粒子背景 ===== */
+  #particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
   }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     background: var(--bg);
     color: var(--text);
+    position: relative;
   }
 
-  /* ===== 侧边栏 ===== */
+  /* 主内容区和侧边栏提升到 canvas 上方 */
+  #app {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== 侧边栏 - 毛玻璃 ===== */
   .sidebar {
     background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid var(--border);
     width: 280px;
+    box-shadow: 4px 0 30px rgba(108, 92, 231, 0.06);
+    z-index: 2;
   }
   .sidebar::-webkit-scrollbar { width: 4px; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -47,11 +71,11 @@
   }
   .sidebar-nav a {
     display: block;
-    padding: 7px 20px 7px 24px;
+    padding: 8px 20px 8px 24px;
     font-size: 13.5px;
     color: var(--text);
     border-left: 3px solid transparent;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     line-height: 1.6;
   }
@@ -59,6 +83,7 @@
     background: var(--sidebar-hover);
     border-left-color: var(--primary-light);
     color: var(--primary);
+    transform: translateX(2px);
   }
   .sidebar-nav a.active {
     background: var(--sidebar-hover);
@@ -90,33 +115,35 @@
   }
   .search input {
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: 10px;
+    padding: 9px 14px;
     font-size: 13px;
-    background: var(--bg);
-    transition: all 0.2s;
+    background: rgba(108, 92, 231, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .search input:focus {
     border-color: var(--primary-light);
-    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.12);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1), 0 4px 16px rgba(108, 92, 231, 0.08);
     outline: none;
+    background: rgba(108, 92, 231, 0.06);
   }
 
-  /* ===== 搜索结果 - 自定义按题目搜索 ===== */
+  /* ===== 搜索结果 ===== */
   .search .results-panel {
     margin-top: 4px;
   }
   .search .results-panel .matching-post {
     cursor: pointer;
-    padding: 5px 8px;
+    padding: 6px 10px;
     margin: 2px 0;
-    border-radius: 6px;
+    border-radius: 8px;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
   }
   .search .results-panel .matching-post:hover {
     background: var(--sidebar-hover);
     border-left-color: var(--primary-light);
+    transform: translateX(2px);
   }
   .search .results-panel .matching-post a {
     color: var(--primary-dark);
@@ -129,8 +156,8 @@
   }
   .search .results-panel .matching-post em.search-keyword {
     color: var(--primary);
-    background: rgba(108,92,231,0.08);
-    padding: 0 3px;
+    background: rgba(108,92,231,0.1);
+    padding: 0 4px;
     border-radius: 3px;
     font-weight: 600;
     font-style: normal;
@@ -151,8 +178,9 @@
     font-weight: 800;
     color: var(--primary-dark);
     border-bottom: 2px solid var(--primary-light);
-    padding-bottom: 12px;
-    margin-bottom: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
   }
   .markdown-section h1 + blockquote {
     margin-top: -8px;
@@ -161,25 +189,27 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--primary);
-    padding: 12px 16px;
-    margin: 28px 0 0 0;
-    background: linear-gradient(135deg, rgba(108,92,231,0.06), rgba(162,155,254,0.04));
-    border-radius: 10px 10px 0 0;
+    padding: 14px 18px;
+    margin: 32px 0 0 0;
+    background: linear-gradient(135deg, rgba(108,92,231,0.07), rgba(162,155,254,0.03));
+    border-radius: 12px 12px 0 0;
     border-left: 4px solid var(--primary);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+  .markdown-section h2:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.08);
   }
   .markdown-section h2 + p {
     margin-top: 0;
   }
 
-  /* ===== 考点标签 ===== */
-  .markdown-section h2 + p > strong:first-child:contains("考点") {
-    display: inline-block;
-  }
-  .markdown-section ul:first-of-type {
-    /* 考点-思路-关键代码-总结 列表 */
-  }
+  /* ===== 列表 ===== */
   .markdown-section ul li {
     margin: 6px 0;
+    transition: transform 0.2s ease;
   }
   .markdown-section ul li strong:first-child {
     color: var(--primary-dark);
@@ -188,19 +218,40 @@
   /* ===== 考点标签专用 ===== */
   .markdown-section h2 + p {
     margin: 8px 0 0 0;
-    padding: 6px 16px;
+    padding: 8px 18px;
     background: linear-gradient(135deg, rgba(253,121,168,0.06), rgba(253,121,168,0.02));
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 12px 12px;
     border-left: 4px solid var(--accent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
-  /* ===== 代码块 ===== */
+  /* ===== 代码块 - 立体卡片 ===== */
   .markdown-section pre {
-    background: var(--code-bg);
-    border-radius: 10px;
-    padding: 16px 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px 22px;
     border: 1px solid var(--border);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md), 0 1px 0 rgba(255,255,255,0.8) inset;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .markdown-section pre:hover {
+    box-shadow: var(--shadow-lg), 0 1px 0 rgba(255,255,255,0.8) inset;
+    transform: translateY(-2px);
+  }
+  .markdown-section pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+    opacity: 0.5;
   }
   .markdown-section code {
     font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
@@ -212,27 +263,51 @@
   .markdown-section p code, .markdown-section li code {
     background: var(--code-bg);
     color: #e17055;
-    padding: 2px 6px;
+    padding: 2px 7px;
     border-radius: 4px;
     font-size: 12.5px;
+    border: 1px solid var(--border);
   }
 
   /* ===== 分隔线 ===== */
   .markdown-section hr {
     border: none;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
-    margin: 36px 0;
+    background: linear-gradient(to right, transparent, var(--border), var(--primary-light), var(--border), transparent);
+    margin: 40px 0;
   }
 
   /* ===== 引用块 ===== */
   .markdown-section blockquote {
     border-left: 4px solid var(--primary-light);
     background: rgba(108,92,231,0.04);
-    padding: 10px 16px;
-    border-radius: 0 8px 8px 0;
+    padding: 12px 20px;
+    border-radius: 0 10px 10px 0;
     color: var(--text-light);
     font-size: 14px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* ===== 图片 ===== */
+  .markdown-section img {
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+  }
+  .markdown-section img:hover {
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.01);
+  }
+
+  /* ===== 链接 ===== */
+  .markdown-section a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .markdown-section a:hover {
+    color: var(--primary-dark);
   }
 
   /* ===== 响应式 ===== */
@@ -256,15 +331,123 @@
   .sidebar-toggle {
     background: var(--primary);
     color: #fff;
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    transition: all 0.3s ease;
   }
   .sidebar-toggle:hover {
     background: var(--primary-dark);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
   }
 </style>
 </head>
 <body>
+<canvas id="particles-canvas"></canvas>
 <div id="app"></div>
+<script>
+// ===== 动态粒子背景 =====
+(function() {
+  var canvas = document.getElementById('particles-canvas');
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var maxParticles = 60;
+  var colors = ['#6c5ce7', '#a29bfe', '#fd79a8', '#c8b6ff', '#e8a0bf'];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = document.documentElement.scrollHeight;
+  }
+
+  function Particle() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r = Math.random() * 3 + 1;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.opacity = Math.random() * 0.3 + 0.05;
+    this.type = Math.random() > 0.7 ? 'triangle' : 'circle';
+  }
+
+  Particle.prototype.update = function() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < -10) this.x = canvas.width + 10;
+    if (this.x > canvas.width + 10) this.x = -10;
+    if (this.y < -10) this.y = canvas.height + 10;
+    if (this.y > canvas.height + 10) this.y = -10;
+  };
+
+  Particle.prototype.draw = function() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    if (this.type === 'triangle') {
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y - this.r * 2);
+      ctx.lineTo(this.x + this.r * 1.5, this.y + this.r);
+      ctx.lineTo(this.x - this.r * 1.5, this.y + this.r);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+
+  function init() {
+    resize();
+    particles = [];
+    for (var i = 0; i < maxParticles; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function connectParticles() {
+    for (var i = 0; i < particles.length; i++) {
+      for (var j = i + 1; j < particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.save();
+          ctx.globalAlpha = (1 - dist / 120) * 0.06;
+          ctx.strokeStyle = '#6c5ce7';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+    }
+    connectParticles();
+    requestAnimationFrame(animate);
+  }
+
+  init();
+  animate();
+
+  window.addEventListener('resize', resize);
+
+  // 滚动时更新 canvas 高度
+  var observer = new MutationObserver(function() {
+    resize();
+  });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+})();
+</script>
 <script>
 window.$docsify = {
   name: '程序设计实践例题题解',
