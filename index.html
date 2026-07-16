@@ -12,17 +12,15 @@
     --primary-light: #a29bfe;
     --primary-dark: #4834d4;
     --accent: #fd79a8;
-    --bg: #f5f2ff;
-    --card-bg: rgba(255, 255, 255, 0.85);
+    --bg: #f8f9fe;
+    --card-bg: #ffffff;
     --text: #2d3436;
     --text-light: #636e72;
-    --border: rgba(108, 92, 231, 0.12);
-    --code-bg: rgba(108, 92, 231, 0.04);
-    --sidebar-bg: rgba(255, 255, 255, 0.9);
-    --sidebar-hover: rgba(108, 92, 231, 0.08);
-    --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.06);
-    --shadow-md: 0 8px 32px rgba(108, 92, 231, 0.1);
-    --shadow-lg: 0 16px 48px rgba(108, 92, 231, 0.12);
+    --border: #e8e8f0;
+    --code-bg: #f0f0f6;
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: #f0eefd;
+    --shadow: 0 2px 12px rgba(108, 92, 231, 0.08);
   }
 
   body {
@@ -31,15 +29,11 @@
     color: var(--text);
   }
 
-  /* ===== 侧边栏 - 毛玻璃 ===== */
+  /* ===== 侧边栏 ===== */
   .sidebar {
     background: var(--sidebar-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid var(--border);
     width: 280px;
-    box-shadow: 4px 0 30px rgba(108, 92, 231, 0.06);
-    z-index: 2;
   }
   .sidebar::-webkit-scrollbar { width: 4px; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -53,11 +47,11 @@
   }
   .sidebar-nav a {
     display: block;
-    padding: 8px 20px 8px 24px;
+    padding: 7px 20px 7px 24px;
     font-size: 13.5px;
     color: var(--text);
     border-left: 3px solid transparent;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
     text-decoration: none;
     line-height: 1.6;
   }
@@ -65,7 +59,6 @@
     background: var(--sidebar-hover);
     border-left-color: var(--primary-light);
     color: var(--primary);
-    transform: translateX(2px);
   }
   .sidebar-nav a.active {
     background: var(--sidebar-hover);
@@ -97,35 +90,33 @@
   }
   .search input {
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 9px 14px;
+    border-radius: 8px;
+    padding: 8px 12px;
     font-size: 13px;
-    background: rgba(108, 92, 231, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg);
+    transition: all 0.2s;
   }
   .search input:focus {
     border-color: var(--primary-light);
-    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1), 0 4px 16px rgba(108, 92, 231, 0.08);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.12);
     outline: none;
-    background: rgba(108, 92, 231, 0.06);
   }
 
-  /* ===== 搜索结果 ===== */
+  /* ===== 搜索结果 - 自定义按题目搜索 ===== */
   .search .results-panel {
     margin-top: 4px;
   }
   .search .results-panel .matching-post {
     cursor: pointer;
-    padding: 6px 10px;
+    padding: 5px 8px;
     margin: 2px 0;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
   }
   .search .results-panel .matching-post:hover {
     background: var(--sidebar-hover);
     border-left-color: var(--primary-light);
-    transform: translateX(2px);
   }
   .search .results-panel .matching-post a {
     color: var(--primary-dark);
@@ -138,8 +129,8 @@
   }
   .search .results-panel .matching-post em.search-keyword {
     color: var(--primary);
-    background: rgba(108,92,231,0.1);
-    padding: 0 4px;
+    background: rgba(108,92,231,0.08);
+    padding: 0 3px;
     border-radius: 3px;
     font-weight: 600;
     font-style: normal;
@@ -160,9 +151,8 @@
     font-weight: 800;
     color: var(--primary-dark);
     border-bottom: 2px solid var(--primary-light);
-    padding-bottom: 14px;
-    margin-bottom: 20px;
-    letter-spacing: 0.02em;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
   }
   .markdown-section h1 + blockquote {
     margin-top: -8px;
@@ -171,27 +161,25 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--primary);
-    padding: 14px 18px;
-    margin: 32px 0 0 0;
-    background: linear-gradient(135deg, rgba(108,92,231,0.07), rgba(162,155,254,0.03));
-    border-radius: 12px 12px 0 0;
+    padding: 12px 16px;
+    margin: 28px 0 0 0;
+    background: linear-gradient(135deg, rgba(108,92,231,0.06), rgba(162,155,254,0.04));
+    border-radius: 10px 10px 0 0;
     border-left: 4px solid var(--primary);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
-  }
-  .markdown-section h2:hover {
-    transform: translateX(3px);
-    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.08);
   }
   .markdown-section h2 + p {
     margin-top: 0;
   }
 
-  /* ===== 列表 ===== */
+  /* ===== 考点标签 ===== */
+  .markdown-section h2 + p > strong:first-child:contains("考点") {
+    display: inline-block;
+  }
+  .markdown-section ul:first-of-type {
+    /* 考点-思路-关键代码-总结 列表 */
+  }
   .markdown-section ul li {
     margin: 6px 0;
-    transition: transform 0.2s ease;
   }
   .markdown-section ul li strong:first-child {
     color: var(--primary-dark);
@@ -200,40 +188,19 @@
   /* ===== 考点标签专用 ===== */
   .markdown-section h2 + p {
     margin: 8px 0 0 0;
-    padding: 8px 18px;
+    padding: 6px 16px;
     background: linear-gradient(135deg, rgba(253,121,168,0.06), rgba(253,121,168,0.02));
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 10px 10px;
     border-left: 4px solid var(--accent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
 
-  /* ===== 代码块 - 立体卡片 ===== */
+  /* ===== 代码块 ===== */
   .markdown-section pre {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 18px 22px;
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 16px 20px;
     border: 1px solid var(--border);
-    box-shadow: var(--shadow-md), 0 1px 0 rgba(255,255,255,0.8) inset;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .markdown-section pre:hover {
-    box-shadow: var(--shadow-lg), 0 1px 0 rgba(255,255,255,0.8) inset;
-    transform: translateY(-2px);
-  }
-  .markdown-section pre::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
-    opacity: 0.5;
+    box-shadow: var(--shadow);
   }
   .markdown-section code {
     font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
@@ -245,51 +212,27 @@
   .markdown-section p code, .markdown-section li code {
     background: var(--code-bg);
     color: #e17055;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 12.5px;
-    border: 1px solid var(--border);
   }
 
   /* ===== 分隔线 ===== */
   .markdown-section hr {
     border: none;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), var(--primary-light), var(--border), transparent);
-    margin: 40px 0;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 36px 0;
   }
 
   /* ===== 引用块 ===== */
   .markdown-section blockquote {
     border-left: 4px solid var(--primary-light);
     background: rgba(108,92,231,0.04);
-    padding: 12px 20px;
-    border-radius: 0 10px 10px 0;
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
     color: var(--text-light);
     font-size: 14px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  /* ===== 图片 ===== */
-  .markdown-section img {
-    border-radius: 12px;
-    box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
-  }
-  .markdown-section img:hover {
-    box-shadow: var(--shadow-lg);
-    transform: scale(1.01);
-  }
-
-  /* ===== 链接 ===== */
-  .markdown-section a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-  .markdown-section a:hover {
-    color: var(--primary-dark);
   }
 
   /* ===== 响应式 ===== */
@@ -313,13 +256,10 @@
   .sidebar-toggle {
     background: var(--primary);
     color: #fff;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
-    transition: all 0.3s ease;
+    border-radius: 0 6px 6px 0;
   }
   .sidebar-toggle:hover {
     background: var(--primary-dark);
-    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
   }
 </style>
 </head>
