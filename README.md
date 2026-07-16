@@ -1168,7 +1168,7 @@ for (int j = 0; j < 9; j++)
 
 ---
 
-## 附录：AC 情况截图
+<h2 id="appendix">附录：AC 情况截图</h2>
 
 ![问题列表](images/ac-submissions-1.jpeg)
 

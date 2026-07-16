@@ -48,3 +48,4 @@
 - [48. 寻找林克的回忆(3) (数独优化/MRV)](README.md#link48)
 - [49. 寻找林克的回忆(4) (大数独/回溯)](README.md#link49)
 - [50. 寻找林克的回忆(5) (数独/位运算优化)](README.md#link50)
+- [附录：AC 情况截图](README.md#appendix)
